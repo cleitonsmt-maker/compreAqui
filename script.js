@@ -1,46 +1,51 @@
-﻿function buscar() {
-  const termo = document.getElementById("busca").value.trim();
-  const resultado = document.getElementById("resultado");
+// ======================================
+// CONFIGURAÇÃO GLOBAL
+// ======================================
 
-  if (termo === "") {
-    resultado.innerHTML = "<p>Digite um produto.</p>";
+// WhatsApp para testes (mesmo número para todos os lojistas)
+const WHATSAPP_NUMBER = "5538999835050";
+
+// Farmácias simuladas (MVP)
+const farmacias = [
+  "Farmácia Central",
+  "Drogaria São João",
+  "Farmácia Popular"
+];
+
+// ======================================
+// FUNÇÃO DE BUSCA — FARMÁCIAS
+// ======================================
+
+function buscarFarmacia() {
+  const termo = document.getElementById("busca").value.trim();
+  const resultados = document.getElementById("resultados");
+
+  resultados.innerHTML = "";
+
+  if (!termo) {
+    resultados.innerHTML = "<p>Digite o nome do produto.</p>";
     return;
   }
 
-  const farmacias = [
-    "Farmácia Central",
-    "Drogaria São José",
-    "Farmácia Popular"
-  ];
+  farmacias.forEach((nomeFarmacia) => {
+    const card = document.createElement("div");
+    card.className = "result-card";
 
-  resultado.innerHTML = "";
+    const mensagem = `Olá, quero ${termo}. Vi no CompreAqui.`;
+    const linkWhatsApp =
+      `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(mensagem)}`;
 
-  farmacias.forEach(farmacia => {
-    const chance = Math.random();
-
-    let status, classe;
-
-    if (chance > 0.65) {
-      status = "Provavelmente disponível";
-      classe = "status-ok";
-    } else if (chance > 0.35) {
-      status = "Consulte a farmácia";
-      classe = "status-mid";
-    } else {
-      status = "Baixa disponibilidade";
-      classe = "status-low";
-    }
-
-    resultado.innerHTML += `
-      <div class="card">
-        <strong>${farmacia}</strong>
-        <p class="${classe}">${status}</p>
-        <a target="_blank"
-           href="https://wa.me/5500000000000?text=Olá,%20quero%20${encodeURIComponent(termo)}.%20Vi%20no%20CompreAqui.">
-           Pedir agora
-        </a>
-      </div>
+    card.innerHTML = `
+      <h3>${nomeFarmacia}</h3>
+      <p class="status">🟡 Produto provavelmente disponível</p>
+      <a class="whatsapp"
+         href="${linkWhatsApp}"
+         target="_blank">
+         Pedir agora
+      </a>
     `;
+
+    resultados.appendChild(card);
   });
 }
 
